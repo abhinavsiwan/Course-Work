@@ -1,0 +1,115 @@
+#div3 {
+                    width:903px;
+                    height:630px;
+                    background: rgb(226,226,226);
+                    margin:10px auto;
+                    border: 2px solid silver;
+            }
+            
+            body {
+                background: rgb(226,226,226);
+                }
+            
+            #div1 {
+                    width:226px;
+                    height:206px;
+                    margin-left: 52px;
+                    margin-top: 10px;
+                    background-image: url(http://cs-server.usc.edu:45678/hw/hw3/images/side_main.png);
+                    float:left;
+                    }
+            
+            #div2 {
+                    width: 562px;
+                    /*width:540px;*/
+                    height:476px;
+                    margin-left:13px;
+                    margin-top: 10px;
+                    background-image: url(http://cs-server.usc.edu:45678/hw/hw3/images/side_main.png);
+                    background-size: 565px;
+                    float:left;
+            }
+            /*
+            
+            #div1 h2 {
+                            margin-left: 36px;
+                            margin-top: 13px;
+                    }
+            */
+            #text_side {
+                    z-index: 100;
+                    position: absolute;
+                    margin-left: 150px;
+                    top: 22px;
+                    font-family: "Trebuchet MS", Helvetica, sans-serif;
+                    }
+            #ul_side {
+                    /*z-index: 100;*/
+                    position: absolute;
+                    top:60px;
+                    margin-left:100px;
+                    list-style: none;
+                    text-align: right;
+                    /*font-weight: bold;*/
+                    font-family: "Trebuchet MS", Helvetica, sans-serif;
+                    font-size: 14px;
+            }
+            
+            #text_header1 {
+                        z-index: 100;
+                        position: absolute;
+                        margin-left: 8px;
+                        top:15px;
+                        font-family: "Trebuchet MS", Helvetica, sans-serif;
+                    }
+             #text_header2 {
+                        z-index: 100;
+                        position: absolute;
+                        margin-left: 375px;
+                        top:60px;
+                        color:rgb(204,204,204);
+                        font-family: "Trebuchet MS", Helvetica, sans-serif;
+                    }
+             #content1 {
+                    position: relative;
+                    top:-25px;
+                    margin-left:12px;
+                    
+                    text-align: left;
+                    /*word-wrap: break-word;*/
+                    font-family: "Trebuchet MS", Helvetica, sans-serif;
+            }
+            #content1_text {
+                    position: relative;
+                    top:-35px;
+                    margin-left:12px; 
+                    text-align: left;
+                    font-size: 14px;
+                    /*word-wrap: break-word;*/
+                    font-family: "Trebuchet MS", Helvetica, sans-serif;
+            }
+            #content2 {
+                        position: relative;
+                        top:-20px;
+                        margin-left: 12px;
+                        text-align: left;
+                        font-family: "Trebuchet MS", Helvetica, sans-serif;
+            }
+            #content2_text {
+                        position: relative;
+                        top:-30px;
+                        margin-left: 12px;
+                        text-align: left;
+                        font-size: 14px;
+                        font-family: "Trebuchet MS", Helvetica, sans-serif;
+            }
+            #ul_main {
+                z-index: 100;
+                position:relative;
+                list-style: none;
+                float:left;
+                font-size: 13px;
+                margin-left: 100px;
+                top:30px;
+                font-family: "Trebuchet MS", Helvetica, sans-serif;
+            }
