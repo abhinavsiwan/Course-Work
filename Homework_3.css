@@ -3,12 +3,13 @@
                     height:630px;
                     background: rgb(226,226,226);
                     margin:10px auto;
-                    border: 2px solid silver;
             }
             
             body {
                 background: rgb(226,226,226);
                 }
+            
+            span {color:rgb(153,153,153);}
             
             #div1 {
                     width:226px;
@@ -29,13 +30,7 @@
                     background-size: 565px;
                     float:left;
             }
-            /*
-            
-            #div1 h2 {
-                            margin-left: 36px;
-                            margin-top: 13px;
-                    }
-            */
+
             #text_side {
                     z-index: 100;
                     position: absolute;
@@ -53,7 +48,11 @@
                     /*font-weight: bold;*/
                     font-family: "Trebuchet MS", Helvetica, sans-serif;
                     font-size: 14px;
+                    color: rgb(157,157,157);
+                    font-weight: bold; 
             }
+
+        #ul_side li a {color:rgb(110,118,125);}
             
             #text_header1 {
                         z-index: 100;
@@ -61,47 +60,55 @@
                         margin-left: 8px;
                         top:15px;
                         font-family: "Trebuchet MS", Helvetica, sans-serif;
+                        font-weight: bold; 
+                        font-size: 28px;
                     }
              #text_header2 {
                         z-index: 100;
-                        position: absolute;
+                        position: relative;
                         margin-left: 375px;
-                        top:60px;
+                        top:-70px;
                         color:rgb(204,204,204);
                         font-family: "Trebuchet MS", Helvetica, sans-serif;
                     }
              #content1 {
                     position: relative;
-                    top:-25px;
+                    top:-50px;
                     margin-left:12px;
-                    
+                    margin-right: 20px;
                     text-align: left;
-                    /*word-wrap: break-word;*/
+                    /*word-wrap: break-word;
+                    word-break: break-all;*/
                     font-family: "Trebuchet MS", Helvetica, sans-serif;
             }
             #content1_text {
                     position: relative;
-                    top:-35px;
+                    top:-60px;
                     margin-left:12px; 
+                    margin-right: 20px;
                     text-align: left;
-                    font-size: 14px;
+                    font-size: 12px;
                     /*word-wrap: break-word;*/
                     font-family: "Trebuchet MS", Helvetica, sans-serif;
+                    font-weight: bold; 
             }
             #content2 {
                         position: relative;
-                        top:-20px;
+                        top:-45px;
                         margin-left: 12px;
+                        margin-right: 20px;
                         text-align: left;
                         font-family: "Trebuchet MS", Helvetica, sans-serif;
             }
             #content2_text {
                         position: relative;
-                        top:-30px;
+                        top:-55px;
                         margin-left: 12px;
+                        margin-right: 20px;
                         text-align: left;
-                        font-size: 14px;
+                        font-size: 12px;
                         font-family: "Trebuchet MS", Helvetica, sans-serif;
+                        font-weight: bold; 
             }
             #ul_main {
                 z-index: 100;
@@ -109,7 +116,19 @@
                 list-style: none;
                 float:left;
                 font-size: 13px;
-                margin-left: 100px;
-                top:30px;
+                margin-left: 70px;
+                top:-5px;
                 font-family: "Trebuchet MS", Helvetica, sans-serif;
+                color: rgb(157,157,157);
+                font-weight: bold;     
             }
+
+            #ul_main li a {color:rgb(157,157,157);}
+            
+            #ul_main li {float:left;
+                        margin:0 5px;
+            }
+
+            #ul_main li + li:before{
+                            content: " | ";
+                        }
