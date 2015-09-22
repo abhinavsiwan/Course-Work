@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Homework 4</title>
+
+        <script type="text/javascript">
+            var text="";
+            var listing_flag=true;
+            var xmlDoc;
+            
+            //Function to create the XML DOM object and calls the createHTML() to parse the XML
+            function parsexml(ar)
+                {
+                    var url=ar.URL.value;
+                    function loadXML(url)
+                    {	
+                        if (window.XMLHttpRequest)
+                        {// code for IE7+, Firefox, Chrome, Opera, Safari
+                            xmlhttp=new XMLHttpRequest();
+                        }
+                        else
+                        {// code for IE6, IE5
+                            xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+                        }
+                        xmlhttp.open("GET",url,false);
+                        xmlhttp.send();
+                        xmlDoc=xmlhttp.responseXML;
+                        if(!xmlDoc)
+                        {
+                            alert("XML File not found!!!");
+                        }
+                        return xmlDoc;
+                    }
+                    xmlDoc = loadXML(url);
+                    if(window.ActiveXobject) //IF IE
+                    { 
+                    if(xmlDoc.parseError.errorCode !=0)
+                    {
+                        var Err=xmlDoc.parseError;
+                        generateError(xmlDoc);
+                        alert("error in XML!!");
+                    }
+                    else
+                    {
+                        createHTML(xmlDoc);
+                        Win= window.open("", "hw4", "height=800,width=600,scrollbars=yes,toolbar=yes");
+                        Win.document.write(text);
+                    }
+                    }	
+                    else //other browsers
+                    {
+                        if (xmlDoc.documentElement.nodeName=="parsererror")
+                        {
+                        alert("error in XML!!");
+                        }
+                        else
+                        {
+                            var listingscheck=xmlDoc.getElementsByTagName("Workbook")[0].childNodes;
+                            if(listingscheck.length==0)
+                                 {
+                                  alert("There are no lisitings in the  xml");
+                              listing_flag=false;
+                                     }
+                            if(listing_flag==true)
+                            {
+                            text="";
+                            xmlDoc.onload=createHTML(xmlDoc);
+                            Win=window.open(" ","hw4","height=800,width=600 ,scrollbars=yes,toolbar=yes");
+                            Win.document.write(text);
+                            }
+                        }
+                    }
+            Win.document.close();
+            }/*End of parsexml() */
+            
+            //Function to parse the xml
+            function createHTML(xmlDoc)
+            {
+            //ELEMENT_NODE =1; 
+            //root=xmlDoc.DocumentElement;
+            var workbook=xmlDoc.getElementsByTagName("Workbook")[0].childNodes;                         //Listings    -- > Workbook
+                //gets the number of childnodes from the first Listings element.
+                text+="<html><title>Stocks of Network Companies</title><h2>Table containing stocks of Network Companies</h2>";
+                text +="<table border='2'>";
+                    for(i=0;i<workbook.length;i++)
+                    {
+                        //item method returns the node at the specified index in the node list  i.e item = Listing
+                      if(workbook.item(i).nodeType==1)                        //checking for Listing element node    --> Table
+                        {
+                          var table=workbook.item(i).childNodes;
+                            //gets the number of childnodes for first listing element. i.e  Location and Listing details
+                          for(j=0;j<table.length;j++)
+                           {
+                               //item = Location
+                             if(table.item(j).nodeType==1)                    //checking for Location element node -->Header
+                               {
+                                  if(table.item(j).nodeName=="Header")            //check for header here
+                                    {
+                                      text +="<tr>";
+                                      var header=table.item(j).childNodes;            // gets the childnodes of Location
+                                         for(k=0;k<header.length;k++)
+                                         {
+                                           if(header.item(k).nodeType==1) 
+                                               //checks for all street,city,state,zip and all       => checks for Data,data,data,data
+                                            {
+                                                if(header.item(k).hasChildNodes())
+                        //hasChildNodes() returns true if the current element node has child nodes , else returns false
+                                               {
+                                                if(header.item(k).firstChild.nodeValue!=" ")
+                                                 {
+                                                   text +="<td>"+ header.item(k).firstChild.nodeValue+"</td>";
+                                                 }
+                                                else
+                                                  {
+                                                    text +="<td>&nbsp;</td>";
+                                                  }
+                                               }
+                                              else
+                                             {
+                                                text +="<td>&nbsp;</td>";
+                                             }
+
+                                            }
+                                         }
+                                       text +="</tr>";
+                                    }
+                                  if(table.item(j).nodeName=="Row")          //checking for Listing details ---> for us Row
+                                    {
+                                       text +="<tr>";
+
+                                        //get the childnodes of Listing details
+                                        var rowchild=table.item(j).childNodes; 
+                                         for(k=0;k<rowchild.length;k++)
+                                         {
+                                           if(rowchild.item(k).nodeType==1)
+                                               //checks for status,price and all for element node
+                                            {
+                                              var nodeName=rowchild.item(k).nodeName;
+                                              if(nodeName=="Network" || nodeName=="Owner")
+                                               {
+                                                 if(rowchild.item(k).hasChildNodes())
+                                                  {
+                                                    if(rowchild.item(k).firstChild.nodeValue!=" ")
+                                                     { 
+                                                        text +="<td>"+ rowchild.item(k).firstChild.nodeValue+"</td>";
+                                                     }
+                                                    else
+                                                     {
+                                                        text +="<td>&nbsp;</td>";
+                                                     }
+                                                  }
+                                                 else
+                                                  {
+                                                    text +="<td>&nbsp;</td>";
+                                                  }
+                                               }
+                    //Feeds code into picture
+                                                /*
+                                                if(nodeName="Feeds")
+                                                        {
+                                                            var feedschild=nodeName.childNodes;
+                                                            for(l=0;l<feedschild.length;l++)
+                                                            {
+                                                                if(feedschild.item(l).nodeType==1)
+                                                                {
+                                                                    if(feedschild.item(l).hasChildNodes())
+                                                                    {
+                                                                        if(feedschild.item(l).firstChild.nodeValue!=" ")
+                                                                        {
+                                                                            text+="<td>" + feedschild.item(l).firstChild.nodeValue + "</td>";
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            text+="<td>"&nbsp;</td>";
+                                                                        }
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        text+="<td>"&nbsp;</td>";
+                                                                    }
+                                                                }
+                                                            }
+
+                                                        }
+                                                */
+                    //Feeds code ends
+
+                                                if(nodeName=="Notes")
+                                               {
+                                                 if(rowchild.item(k).hasChildNodes())
+                                                  {
+                                                    if(rowchild.item(k).firstChild.nodeValue!=" ")
+                                                     { 
+                                                        text +="<td>"+ rowchild.item(k).firstChild.nodeValue+"</td>";
+                                                     }
+                                                    else
+                                                     {
+                                                        text +="<td>&nbsp;</td>";
+                                                     }
+                                                  }
+                                                 else
+                                                  {
+                                                    text +="<td>&nbsp;</td>";
+                                                  }
+                                               }
+                                              if(nodeName=="HomePage")
+                                               {
+                                                if(rowchild.item(k).hasChildNodes())
+                                                  {
+                                                     if(rowchild.item(k).firstChild.nodeValue!=" ")
+                                                     {
+                                                       text +="<td><a href='"+rowchild.item(k).firstChild.nodeValue+"'>Link to lisitng</td>";
+                                                     }
+                                                     else
+                                                     {
+                                           text +="<td>&nbsp;</td>";
+                                                     }
+                                                  }
+                                                 else
+                                                  {
+                                                    text +="<td>&nbsp;</td>";
+                                                  }
+                                               }
+
+                                              if(nodeName=="Logo")
+                                               {
+                                          if(rowchild.item(k).hasChildNodes())
+                                                  { 
+                                                     if(rowchild.item(k).firstChild.nodeValue!=" ")
+                                                     {                                   
+                                               text +="<td colspan='3'><img src='"+ rowchild.item(k).firstChild.nodeValue+"' alt='"+rowchild.item(k).firstChild.nodeValue+"'></td>";
+                                                     }
+                                                     else
+                                                     {
+                                   text +="<td colspan='3'>&nbsp;</td>";
+                                                     }
+                                                  }
+                                                 else
+                                                  {
+                                                    text +="<td colspan='3'>&nbsp;</td>";
+                                                  }
+                                               }
+
+                                            }                               
+                                         }
+                                       text +="</tr>";
+                                    }
+                               }
+                           }
+                        }
+                    }
+                  text +="</table>";
+                  text +="</html>";
+            }
+     
+</script>
+</head>
+<body>
+<br /><br /><br />
+<center>
+<b>Enter URL for Real Estate xml</b><br /><br />
+<form name="sangform" method="POST" id="formid" action="XMLPARSE(URL.value)">
+<input type="text" name="URL" id="URL" maxlength="255" size="30" value="">
+<br /><br />
+<input type= "button" name= "submitquery" id="submit" value= "Submit Query" onClick= "parsexml(this.form)"/>
+</form>
+</center>
+</body>
+</html>    
