@@ -223,7 +223,7 @@ if(check_header[0].childNodes[0].nodeValue=="Network" && check_header[1].childNo
                                                     {
                                                         if(feed.item(l).hasChildNodes())
                                                         {   
-                                                            if(feed.item(l).firstChild.nodeValue!=" ")
+                                                            if(feed.item(l).firstChild.nodeValue.trim() !="")
                                                             {  
                                                                 text +="<li>"+ feed.item(l).firstChild.nodeValue+"</li>";    
                                                             }
