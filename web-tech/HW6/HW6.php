@@ -17,6 +17,7 @@ charset=ISO-8859-1">
                     border:1px solid black;
             }
             table { margin:10px 10px;}
+            #div2 table { margin:20px 130px;}
         </style>
         
         <script type="text/javascript">
@@ -174,7 +175,6 @@ charset=ISO-8859-1">
         </div>
          
         <div id="div2">
-            <h2>Your output:</h2>
         <?php if($_GET["submit"]): ?>
             <?php
             $add=$cit=$stat=$degr=" ";
@@ -189,10 +189,12 @@ charset=ISO-8859-1">
                 else
                      $degr_value="si";
                 $url="http://maps.google.com/maps/api/geocode/xml?address=".$add.",".$cit.",".$stat;
+                /*
                 echo ($url);
                 echo "<br>";
                 echo ($degr_value);
                 echo "<br>";
+                */
                 //$xmlload=new SimpleXmlElement(file_get_contents($url));
 
                 //Pass the URL to get the XML response
@@ -214,33 +216,227 @@ charset=ISO-8859-1">
                     if(!empty($xml->result[0]->geometry[0]->location[0]->lat))
                     {
                         $lat=$xml->result[0]->geometry[0]->location[0]->lat;
-                        echo ($lat);
-                        echo "<br>";
+                        //echo ($lat);
+                        //echo "<br>";
                     }
                     else
                     {
                         $lat=NULL;
-                        echo ($lat);
-                        echo "<br>";
+                        //echo ($lat);
+                        //echo "<br>";
                     }
 
                     if(!empty($xml->result[0]->geometry[0]->location[0]->lng))
                     {
                         $lng=$xml->result[0]->geometry[0]->location[0]->lng;
-                        echo ($lng);
-                        echo "<br>";
+                        //echo ($lng);
+                        //echo "<br>";
                     }
                     else
                     {
                         $lng=NULL;
-                        echo ($lng);
-                        echo "<br>";
+                        //echo ($lng);
+                        //echo "<br>";
                     }
                 }
              }
             
+            //$forecast_key="db84367e6464042922098d10c510114a";
             $url_forecast="https://api.forecast.io/forecast/db84367e6464042922098d10c510114a/".$lat.",".$lng."?units=".$degr_value."&exclude=false";
-            echo ($url_forecast);
+            //echo ($url_forecast);
+            //echo "<br>";
+
+            //Pass the Forecast url to get the JSON response
+            $result_forecast = file_get_contents($url_forecast);
+            $json_o=json_decode($result_forecast);
+            
+/*
+            $jsonIterator = new RecursiveIteratorIterator(
+            new RecursiveArrayIterator(json_decode($result_forecast, TRUE)),
+            RecursiveIteratorIterator::SELF_FIRST);
+
+            foreach ($jsonIterator as $key => $val) 
+            {
+                if(is_array($val)) 
+                {
+                    echo "$key:";
+                    echo "<br>";
+                } 
+                else 
+                {
+                    echo "$key => $val";
+                    echo "<br>";
+                }
+            }
+            */
+            //echo ($json_o->latitude);
+            //echo "<br>";
+            //echo ($json_o->currently->time);
+            //echo "<br>";
+
+            //Weather Condition
+            if(!empty($json_o->currently->summary))
+            {
+                $weather_condition=$json_o->currently->summary;
+            }
+            else
+            {
+                $weather_condition=NULL;
+            }
+            //Weather Temperature
+            if(!empty($json_o->currently->temperature))
+            {
+                $temperature=round($json_o->currently->temperature);
+            }
+            else
+            {
+                $temperature=NULL;
+            }   
+            //Icon
+            //$dir="C:\Users\siwan\Desktop\Courses\CSCI571\Homewroks\Homeworks_Fall2015\HW6\Images";
+            $dir="http://cs-server.usc.edu:45678/hw/hw6/images/";
+            if(!empty($json_o->currently->icon))
+            {
+                $icon=$json_o->currently->icon;
+                //clear day
+                if($icon=="clear-day")
+                    $icon_img=$dir."clear.png";
+                //clear night
+                if($icon=="clear-night")
+                    $icon_img=$dir."clear_night.png";
+                //rain
+                if($icon=="rain")
+                    $icon_img=$dir."rain.png";
+                //snow
+                if($icon=="snow")
+                    $icon_img=$dir."snow.png";
+                //sleet
+                if($icon=="sleet")
+                    $icon_img=$dir."sleet.png";
+                //wind
+                if($icon=="wind")
+                    $icon_img=$dir."wind.png";
+                //fog
+                if($icon=="fog")
+                    $icon_img=$dir."fog.png";
+                //cloudy
+                if($icon=="cloudy")
+                    $icon_img=$dir."cloudy.png";
+                //partly-cloudy-day
+                if($icon=="partly-cloudy-day")
+                    $icon_img=$dir."cloud_day.png";
+                //partly-cloudy-night
+                if($icon=="partly-cloudy-night")
+                    $icon_img=$dir."cloud_night.png";
+                
+                
+            }
+            else
+            {
+                $icon=NULL;
+            }
+            //Precipitation
+            $precipitation=$json_o->currently->precipIntensity;
+            if($precipitation>=0 && $precipitation<0.002)
+                $precip="None";
+            if($precipitation>=0.002 && $precipitation<0.017)
+                $precip="Very Light";
+            if($precipitation>=0.017 && $precipitation<0.1)
+                $precip="Light";
+            if($precipitation>=0.1 && $precipitation<0.4)
+                $precip="Moderate";
+            if($precipitation>=0.4)
+                $precip="Heavy";
+
+            //Chance of Rain
+            $rain=round((float)$json_o->currently->precipProbability * 100)."%";
+            
+            //Wind Speed
+            if(!empty($json_o->currently->windSpeed))
+            {
+                $wind_speed=round($json_o->currently->windSpeed)." mph";
+            }
+            else
+            {
+                $wind_speed=NULL;
+            }
+            //Dew Point
+            if(!empty($json_o->currently->dewPoint))
+            {
+                $dew_point=round($json_o->currently->dewPoint);
+            }
+            else
+            {
+                $dew_point=NULL;
+            }
+            //Humidity
+            if(!empty($json_o->currently->humidity))
+            {
+                $humidity=round((float)$json_o->currently->humidity * 100)."%";
+            }
+            else
+            {
+                $humidity=NULL;
+            }
+            //Visibility
+            if(!empty($json_o->currently->visibility))
+            {
+                $visibility=round($json_o->currently->visibility)." mi";
+            }
+            else
+            {
+                $visibility=NULL;
+            }
+            //Sunrise
+            if(!empty($json_o->daily->data[0]->sunriseTime))
+            {
+                $sunr=$json_o->daily->data[0]->sunriseTime;
+                $date = date_create("",timezone_open("America/Los_Angeles"));
+                date_timestamp_set($date, $sunr);
+                $sunrise=date_format($date, 'h:i A');
+            }
+            else
+            {
+                $sunrise=NULL;
+            }
+            //Sunset
+            if(!empty($json_o->daily->data[0]->sunsetTime))
+            {
+                $suns=$json_o->daily->data[0]->sunsetTime;
+                $date = date_create("",timezone_open("America/Los_Angeles"));
+                date_timestamp_set($date, $suns);
+                $sunset=date_format($date, 'h:i A');
+            }
+            else
+            {
+                $sunset=NULL;
+            }
+
+            echo ("<table cellspacing=\"5\"");
+            echo ("<tr><th colspan=\"2\">$weather_condition</th></tr>");
+            echo ("<tr><th colspan=\"2\">$temperature</th></tr>");
+            echo ("<tr><th colspan=\"2\"><img src='$icon_img' alt='Weather Pic'></th></tr>");
+            echo ("<tr><td>Precipitation:</td><td>$precip</td></tr>");
+            echo ("<tr><td>Chance of Rain:</td><td>$rain</td></tr>");
+            echo ("<tr><td>Wind Speed:</td><td>$wind_speed</td></tr>");
+            echo ("<tr><td>Dew Point:</td><td>$dew_point</td></tr>");
+            echo ("<tr><td>Humidity:</td><td>$humidity</td></tr>");
+            echo ("<tr><td>visibility:</td><td>$visibility</td></tr>");
+            echo ("<tr><td>Sunrise:</td><td>$sunrise</td></tr>");
+            echo ("<tr><td>Sunset:</td><td>$sunset</td></tr>");
+
+            //echo ($weather_condition)."<br>";
+            //echo ($temperature)."<br>";
+            //echo ($icon_img)."<br>";
+            //echo "<img src='$icon_img' alt='Weather Pic'>"."<br>";
+            //echo ($precip)."<br>";
+            //echo ($rain)."<br>";
+            //echo ($wind_speed)."<br>";
+            //echo ($dew_point)."<br>";
+            //echo ($humidity)."<br>";
+            //echo ($visibility)."<br>";
+            //echo ($sunrise)."<br>";
+            //echo ($sunset)."<br>";
             ?>
         <?php endif; ?> 
         </div>
