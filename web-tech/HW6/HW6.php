@@ -17,7 +17,14 @@ charset=ISO-8859-1">
                     border:1px solid black;
             }
             table { margin:10px 10px;}
-            #div2 table { margin:20px 130px;}
+            #div2 .one { margin:20px 40px;
+                            width:350;
+                            
+                        }
+             #div2 .two { margin:20px 60px;
+                            width:350;
+                            
+                        }
         </style>
         
         <script type="text/javascript">
@@ -27,7 +34,7 @@ charset=ISO-8859-1">
                 var address_fill=false;
                 var city_fill=false;
                 var state_fill=false;
-                var degree_fill=false;
+                //var degree_fill=false;
             
                 if(form.address.value != "")
                     address_fill=true;
@@ -76,6 +83,37 @@ charset=ISO-8859-1">
                     return true;
                 }       
             }
+            
+            function resetForm(frm_elements)
+            {
+                for (i = 0; i < frm_elements.length; i++)
+                {
+                    //alert(frm_elements.length);
+                    field_type = frm_elements[i].type.toLowerCase();
+                    switch (field_type)
+                    {
+                    case "text":
+                    case "password":
+                    case "textarea":
+                    case "hidden":
+                        frm_elements[i].value = "";
+                        break;
+                    case "radio":
+                    case "checkbox":
+                        if (frm_elements[i].checked)
+                        {
+                            frm_elements[i].checked = false;
+                        }
+                        break;
+                    case "select-one":
+                    case "select-multi":
+                        frm_elements[i].selectedIndex = -1;
+                        break;
+                    default:
+                        break;
+                    }
+                }
+            }
         </script>
     </head> 
     <body>
@@ -95,10 +133,10 @@ charset=ISO-8859-1">
                         <?php (isset($_GET["state"])) ? $state1 = $_GET["state"] : $state1= ""; ?>
                         <td>State:<sup>*</sup></td>
                         <td><select name="state">
-                                <option <?php if ($state1=="  ") echo 'selected' ?> value="  ">  </option>
+                                <option <?php if ($state1=="") echo 'selected' ?> value="">  </option>
                                 <option <?php if ($state1=="AL") echo 'selected' ?> value="AL">Albama</option>
                                 <option <?php if ($state1=="Ak") echo 'selected' ?> value="AK">Alaska</option>
-                                <option <?php if ($state1=="AZ") echo 'selected' ?>value="AZ">Arizona</option>
+                                <option <?php if ($state1=="AZ") echo 'selected' ?> value="AZ">Arizona</option>
                                 <option <?php if ($state1=="AR") echo 'selected' ?> value="AR">Arkansas</option>
                                 <option <?php if ($state1=="CA") echo 'selected' ?> value="CA">California</option>
                                 <option <?php if ($state1=="CO") echo 'selected' ?> value="CO">Colorado</option>
@@ -106,7 +144,7 @@ charset=ISO-8859-1">
                                 <option <?php if ($state1=="DE") echo 'selected' ?> value="DE">Delaware</option>
                                 <option <?php if ($state1=="DC") echo 'selected' ?> value="DC">District of Columbia</option>
                                 <option <?php if ($state1=="FL") echo 'selected' ?> value="FL">Florida</option>
-                                <option <?php if ($state1=="GA") echo 'selected' ?> value="GA">Georgia/option>
+                                <option <?php if ($state1=="GA") echo 'selected' ?> value="GA">Georgia</option>
                                 <option <?php if ($state1=="HI") echo 'selected' ?> value="HI">Hawaii</option>
                                 <option <?php if ($state1=="ID") echo 'selected' ?> value="ID">Idaho</option>
                                 <option <?php if ($state1=="IL") echo 'selected' ?> value="IL">Illinois</option>
@@ -152,15 +190,16 @@ charset=ISO-8859-1">
                     </tr>
                     <tr>
                         <td>Degree:<sup>*</sup></td>
-                        <td><input type="radio" name="degree" value="fahrenheit" id="fahid" <?php if(isset($degree) && $degree=="fahrenheit") echo "checked" ?> />Fahrenheit
-                    <input type="radio" name="degree" id="celid" value="celcius" <?php if(isset($degree) && $degree=="celcius") echo "checked" ?>/>Celcius
-                        </td>
+<td>
+<input type="radio" name="degree" <?php echo isset($_GET["degree"]) && $_GET["degree"]=="us"?"checked":"";?> value="us">Fahrenheit
+<input type="radio" name="degree" <?php echo isset($_GET["degree"]) && $_GET["degree"]=="si"?"checked":"";?> value="si">Celsius
+</td>
                     </tr>
                     <tr>
                         <td></td>
                         <td>
                             <input type="submit" name="submit" value="Search" onclick="validate(this.form)" />
-                            <input type="reset" value="Clear" />
+                            <input type="button" value="Clear" onclick="resetForm(this.form)" />
                         </td>
                     </tr>
                     <tr>
@@ -175,7 +214,7 @@ charset=ISO-8859-1">
         </div>
          
         <div id="div2">
-        <?php if($_GET["submit"]): ?>
+        <?php if (isset($_GET["submit"])): ?>
             <?php
             $add=$cit=$stat=$degr=" ";
             if($_GET["address"]!=null && $_GET["city"]!=null && $_GET["state"]!=null && $_GET["degree"]!=null)
@@ -183,26 +222,17 @@ charset=ISO-8859-1">
                 $add=rawurlencode($_GET["address"]);
                 $cit=rawurlencode($_GET["city"]);
                 $stat=rawurlencode($_GET["state"]);
-                $degr=rawurlencode($_GET["degree"]);
-                if($degr=="fahrenheit")
-                    $degr_value="us";
-                else
-                     $degr_value="si";
+                $degree=$_GET["degree"];
+    
                 $url="http://maps.google.com/maps/api/geocode/xml?address=".$add.",".$cit.",".$stat;
-                /*
-                echo ($url);
-                echo "<br>";
-                echo ($degr_value);
-                echo "<br>";
-                */
-                //$xmlload=new SimpleXmlElement(file_get_contents($url));
 
                 //Pass the URL to get the XML response
                 $result = file_get_contents($url);
                 $xml = new SimpleXMLElement($result);
-            /*
+            /*  
+                
                 $status=$xml->status;
-                $type=$xml->result[0]->type;
+            x    $type=$xml->result[0]->type;
                 $format_add=$xml->result[0]->formatted_address;
                 $long_name=$xml->result[0]->address_component[0]->long_name;
             */
@@ -216,63 +246,28 @@ charset=ISO-8859-1">
                     if(!empty($xml->result[0]->geometry[0]->location[0]->lat))
                     {
                         $lat=$xml->result[0]->geometry[0]->location[0]->lat;
-                        //echo ($lat);
-                        //echo "<br>";
                     }
                     else
                     {
                         $lat=NULL;
-                        //echo ($lat);
-                        //echo "<br>";
                     }
 
                     if(!empty($xml->result[0]->geometry[0]->location[0]->lng))
                     {
                         $lng=$xml->result[0]->geometry[0]->location[0]->lng;
-                        //echo ($lng);
-                        //echo "<br>";
                     }
                     else
                     {
                         $lng=NULL;
-                        //echo ($lng);
-                        //echo "<br>";
                     }
                 }
-             }
             
-            //$forecast_key="db84367e6464042922098d10c510114a";
-            $url_forecast="https://api.forecast.io/forecast/db84367e6464042922098d10c510114a/".$lat.",".$lng."?units=".$degr_value."&exclude=false";
-            //echo ($url_forecast);
-            //echo "<br>";
+            $forecast_key="db84367e6464042922098d10c510114a";
+            $url_forecast="https://api.forecast.io/forecast/$forecast_key/".$lat.",".$lng."?units=".$degree."&exclude=false";
 
             //Pass the Forecast url to get the JSON response
             $result_forecast = file_get_contents($url_forecast);
             $json_o=json_decode($result_forecast);
-            
-/*
-            $jsonIterator = new RecursiveIteratorIterator(
-            new RecursiveArrayIterator(json_decode($result_forecast, TRUE)),
-            RecursiveIteratorIterator::SELF_FIRST);
-
-            foreach ($jsonIterator as $key => $val) 
-            {
-                if(is_array($val)) 
-                {
-                    echo "$key:";
-                    echo "<br>";
-                } 
-                else 
-                {
-                    echo "$key => $val";
-                    echo "<br>";
-                }
-            }
-            */
-            //echo ($json_o->latitude);
-            //echo "<br>";
-            //echo ($json_o->currently->time);
-            //echo "<br>";
 
             //Weather Condition
             if(!empty($json_o->currently->summary))
@@ -286,50 +281,38 @@ charset=ISO-8859-1">
             //Weather Temperature
             if(!empty($json_o->currently->temperature))
             {
-                $temperature=round($json_o->currently->temperature);
+                if($degree=="us")
+                {
+                    $temperature=round($json_o->currently->temperature)."&deg; F";
+                }
+                if($degree=="si")
+                {
+                    $temperature=round($json_o->currently->temperature)."&deg; C";
+                }
+                    
             }
             else
             {
                 $temperature=NULL;
             }   
             //Icon
-            //$dir="C:\Users\siwan\Desktop\Courses\CSCI571\Homewroks\Homeworks_Fall2015\HW6\Images";
             $dir="http://cs-server.usc.edu:45678/hw/hw6/images/";
+    
+            $image['clear-day'] = "clear.png";
+            $image['clear-night'] = "clear_night.png";
+            $image['rain'] = "rain.png";
+            $image['snow'] = "snow.png";
+            $image['sleet'] = "sleet.png";
+            $image['wind'] = "wind.png";
+            $image['fog'] = "fog.png";
+            $image['cloudy'] = "cloudy.png";
+            $image['partly-cloudy-day'] = "cloud_day.png";
+            $image['partly-cloudy-night'] = "cloud_night.png";
+    
             if(!empty($json_o->currently->icon))
             {
-                $icon=$json_o->currently->icon;
-                //clear day
-                if($icon=="clear-day")
-                    $icon_img=$dir."clear.png";
-                //clear night
-                if($icon=="clear-night")
-                    $icon_img=$dir."clear_night.png";
-                //rain
-                if($icon=="rain")
-                    $icon_img=$dir."rain.png";
-                //snow
-                if($icon=="snow")
-                    $icon_img=$dir."snow.png";
-                //sleet
-                if($icon=="sleet")
-                    $icon_img=$dir."sleet.png";
-                //wind
-                if($icon=="wind")
-                    $icon_img=$dir."wind.png";
-                //fog
-                if($icon=="fog")
-                    $icon_img=$dir."fog.png";
-                //cloudy
-                if($icon=="cloudy")
-                    $icon_img=$dir."cloudy.png";
-                //partly-cloudy-day
-                if($icon=="partly-cloudy-day")
-                    $icon_img=$dir."cloud_day.png";
-                //partly-cloudy-night
-                if($icon=="partly-cloudy-night")
-                    $icon_img=$dir."cloud_night.png";
-                
-                
+                $icon=$image[$json_o->currently->icon];
+                $icon_img=$dir.$icon;
             }
             else
             {
@@ -354,7 +337,15 @@ charset=ISO-8859-1">
             //Wind Speed
             if(!empty($json_o->currently->windSpeed))
             {
-                $wind_speed=round($json_o->currently->windSpeed)." mph";
+                if($degree=="us")
+                {
+                    $wind_speed=round($json_o->currently->windSpeed)." mph";
+                }
+                if($degree=="si")
+                {
+                    $wind=$json_o->currently->windSpeed;
+                    $wind_speed=round($wind)." mpsec";
+                }
             }
             else
             {
@@ -412,10 +403,12 @@ charset=ISO-8859-1">
                 $sunset=NULL;
             }
 
-            echo ("<table cellspacing=\"5\"");
+            echo ("<table class=\"one\">");
             echo ("<tr><th colspan=\"2\">$weather_condition</th></tr>");
             echo ("<tr><th colspan=\"2\">$temperature</th></tr>");
             echo ("<tr><th colspan=\"2\"><img src='$icon_img' alt='Weather Pic'></th></tr>");
+            echo ("</table>");
+            echo ("<table class=\"two\"");
             echo ("<tr><td>Precipitation:</td><td>$precip</td></tr>");
             echo ("<tr><td>Chance of Rain:</td><td>$rain</td></tr>");
             echo ("<tr><td>Wind Speed:</td><td>$wind_speed</td></tr>");
@@ -437,8 +430,16 @@ charset=ISO-8859-1">
             //echo ($visibility)."<br>";
             //echo ($sunrise)."<br>";
             //echo ($sunset)."<br>";
+        }
+        else
+        {
+            echo ("<table>");
+            echo ("<tr><td align=\"center\">Please select all the required fields</td></tr>");
+            //echo ("Please select all the required fields")."<br>";
+            echo ("</table>");
+        }
             ?>
-        <?php endif; ?> 
+       <?php endif; ?>
         </div>
     </body>                                            
 </html>
