@@ -1,0 +1,52 @@
+.bgimage {
+    background-image: url('http://cs-server.usc.edu:45678/hw/hw8/images/bg.jpg');
+    background-position: center;
+    background-size: cover;
+    height:851px;
+}
+
+.well {
+    margin: 30px 30px 0px 30px;
+    border: none;
+    background-color: rgba(0,0,0,0.3);
+    height:auto;
+    color: white;
+}
+
+hr {margin: 10px 0px 0px 0px;}
+
+.form-group {width:auto;}
+
+sup { color:red;}
+
+#return { visibility: hidden;}
+#return ul li { background: white;}
+
+.tab-content {width: 1000px;
+    height: auto;
+    border: 1px black solid;
+    float: left;
+}
+
+.tab-content1 {width: 500px;
+    height: 430px;
+    border: 1px black solid;
+    float: left;
+}
+
+.one { background: #FF9999;
+    width:500px;
+    }
+
+.one th, .one td { 
+     border-top: none !important; 
+ }
+
+.two { margin:-20px 0px 0px 0px;   
+    width:500px;
+    }
+
+.icon { max-width: 150px;
+        margin: 0 auto;
+        display: block;
+    }
