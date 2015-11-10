@@ -5,31 +5,30 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-        <link rel="stylesheet" href="Bootstrap/css/styles.css">
+        <link rel="stylesheet" href="styles.css">
         <title>Weather Forecast</title>
         
         <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
         <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <script src="Bootstrap/js/script.js"></script>
         
         <script type="text/javascript" src="script.js"></script>
+        <script src="http://openlayers.org/api/OpenLayers.js"></script>
     </head>
     
     <body>
-        <header class="bgimage">
             <div class="container">
                 <center><h2><b>Forecast Search</b></h2></center>
                 <div class="row">
-                    <form class="form-inline well" role="form" name="form" id="formid" method="post" action="">
+                    <form class="form-inline well opacity" role="form" name="form" id="formid" method="post" action="">
                         <div class="form-group col-xs-12 col-sm-12 col-md-3">
                             <label for="forecastStreetAdd">Street Address:<sup>*</sup></label><br>
-                            <input type="text" class="form-control input-sm" name="address" id="addressid" placeholder="Enter street address">
+                            <input type="text" class="form-control input-sm" name="address" id="addressid" value="720 W 27 Street" placeholder="Enter street address">
                         </div>
                         
                         <div class="form-group col-xs-12 col-sm-12 col-md-2">
                             <label for="forecastCity">City:<sup>*</sup></label><br>
-                            <input type="text" class="form-control input-sm" name="city" id="cityid" placeholder="Enter the city name">
+                            <input type="text" class="form-control input-sm" name="city" id="cityid" value="Los Angeles" placeholder="Enter the city name">
                         </div>
                         
                         <div class="form-group col-xs-12 col-sm-12 col-md-2">
@@ -40,7 +39,7 @@
                                 <option  value="AK">Alaska</option>
                                 <option  value="AZ">Arizona</option>
                                 <option  value="AR">Arkansas</option>
-                                <option  value="CA">California</option>
+                                <option  value="CA" selected="selected">California</option>
                                 <option  value="CO">Colorado</option>
                                 <option  value="CT">Connecticut</option>
                                 <option  value="DE">Delaware</option>
@@ -115,24 +114,24 @@
             <br>
             <div class="container" id="return">
                   <ul class="nav nav-tabs">
-                    <li class="active"><a data-toggle="tab" href="#RightNow" id="rightnow">Right Now</a></li>
+                    <li class="active"><a data-toggle="tab" href="#page1" id="rightnow">Right Now</a></li>
                     <li><a data-toggle="tab" href="#Next24" id="next24">Next 24 Hours</a></li>
                     <li><a data-toggle="tab" href="#Next7" id="next7">Next 7 Days</a></li>
                   </ul>
 
-                  <div class="tab-content">
-                    <div id="RightNow" class="tab-pane in active">
+                <div class="tab-content">
+                    <div id="page1" class="tab-pane in active">
+                        <div class="col-md-6" id="RightNow">
+                        </div>
+                        <div class="col-md-6" id="map">
+                        </div>
                     </div>
-                    <div id="Next24" class="tab-pane">
+                    <div id="Next24" class="tab-pane col-md-12">
                     </div>
-                    <div id="Next7" class="tab-pane">
+                    <div id="Next7" class="tab-pane col-md-12">
                     </div>
-                  </div>
-                <!--
-                <div class="tab-content1">
-                </div>  -->
+                </div>
             </div>
-        </header>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     </body>
     
