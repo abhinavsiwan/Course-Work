@@ -61,7 +61,7 @@ function validate()
 {
     //alert("I am here");
     $.ajax({
-        url: 'HW8.php',
+        url: 'http://usc2015-env.elasticbeanstalk.com/',
         type: 'post',
         data: {
                 address: $('#addressid').val(),
@@ -101,14 +101,10 @@ function resetForm(frm_elements)
             break;
         }
     }
-    //document.getElementById("return").innerHTML=" ";
-    document.getElementById("RightNow").innerHTML=" ";
-    document.getElementById("Next24").innerHTML=" ";
-    document.getElementById("Next7").innerHTML=" ";
+    //$('#return').hide();
+    document.getElementById("return").style.visibility="hidden";
+    $('a[href="#page1"]').tab('show');
     document.getElementById("map").innerHTML=" ";
-    //Clearing the div area on account of clear form
-    /*var divelm=document.getElementById("return");
-    divelm.parentNode.removeChild(divelm); */
 }
 
 function unit_temp(temp)
@@ -282,26 +278,46 @@ function create_weathermap(long,lat)
             sphericalMercator: true
         }
     );
-
-
-    map.addLayers([mapnik, layer_precipitation, layer_cloud]);
-    map.setCenter(position, zoom );
-
+    
+    //map.addLayers([mapnik, layer_precipitation, layer_cloud]);
+    //map.setCenter(position, zoom );
+    
+    try
+    {
+        map.addLayers([mapnik, layer_precipitation, layer_cloud]);
+        map.setCenter(position, zoom );
+        $('a[data-toggle="tab"]').off('shown.bs.tab');
+    }
+    catch(err)
+    {
+        document.getElementById("map").innerHTML=" ";
+        $('a[data-toggle="tab"]').on('shown.bs.tab',function(e) {
+            var target=$(e.target).attr("href");
+            if((target== '#page1')) {
+                create_weathermap(long,lat);
+            }
+        });
+    } 
 }
 
 
+
+//-----------------------------------------------------------------------------------------------------------------------
 //This function is called on click of facebook icon to post the data to Facebook
 function fb_post()
 {
     //alert("I am here");
-    var description="Current Weather in "+city + ", " + state;
+    var name="Current Weather in "+city + ", " + state;
+    var description=" ";
+    description+=weather_condition1+", "+temperature1;
     FB.ui(
     {
         method: 'feed',
-        caption:"Weather Forecast By Forecast.io",
+        name:name,
         description:description,
-        display:'popup',
-        link: 'https://developers.facebook.com/docs/',
+        caption:"WEATHER INFORMATION FROM FORECAST.IO",
+        picture: icon_img,
+        link: 'http://forecast.io/',
     }, 
     function(response)
     {
@@ -316,6 +332,7 @@ function fb_post()
     }
     ); 
 }
+
 window.fbAsyncInit = function() {
 FB.init({
 appId      : '1152751928086077',
@@ -323,6 +340,7 @@ xfbml      : true,
 version    : 'v2.5'
 });
 };
+
 (function(d, s, id){
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) {return;}
@@ -331,6 +349,7 @@ version    : 'v2.5'
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 
+//------------------------------------------------------------------------------------------------------------------------
 
 var degree,city,state,dir;
 var weather_condition1,icon_img,temperature1;
@@ -340,6 +359,9 @@ function transform(output)
 {
     //alert("I am in Transform");
     document.getElementById("return").style.visibility="visible";
+    //$('a[href="#page1"]').tab('show');
+    document.getElementById("map").innerHTML=" ";
+    
     var json_o=JSON.parse(output);
     var tab;
     
@@ -504,13 +526,15 @@ function transform(output)
     text+="</table></div>";
     
     document.getElementById("RightNow").innerHTML=text;
-    
+
+//-------------------------------------------------------------------------------------------------------------------
     //Creating the weather map
     //Map will be loaded only when the rightnow tab is active
-    if ($('#rightnow').parent().hasClass('active'))
+    /*if ($('#rightnow').parent().hasClass('active'))
     {
+    */
         create_weathermap(json_o.longitude,json_o.latitude);
-    }
+    //}
 //--------------------------------------------------------------------------------------------------------------------  
     //24 Hours data calculation
     if(json_o.hourly.summary!=null)
@@ -805,7 +829,7 @@ function transform(output)
     text7+="<div class='col-md-2'></div>";
     for(i=0;i<7;i++)
     {
-        text7+="<div id='modal"+i+"' class='col-md-1 mod"+i+"' data-toggle='modal' data-target='#myModal"+i+"'>"+day[i]+"<br><br>"+month[i]+" "+dd[i]+"<br><br><img src='"+icon_day[i]+"' alt='Icon Pic' width='80px' height='80px'><br><p style='font-weight:normal;'>Min Temp</p><p style='font-size:20px'>"+tempMin_day[i]+"</p><p style='font-weight:normal;'>Max Temp</p><p style='font-size:20px'>"+tempMax_day[i]+"</p></div>";
+        text7+="<div id='modal"+i+"' class='col-md-1 mod"+i+"' data-toggle='modal' data-target='#myModal"+i+"'>"+day[i]+"<br><br>"+month[i]+" "+dd[i]+"<br><br><img src='"+icon_day[i]+"' alt='Icon Pic' width='80px' height='80px'><br><p style='font-weight:normal;'>Min<br>Temp</p><p style='font-size:20px'>"+tempMin_day[i]+"</p><p style='font-weight:normal;'>Max<br>Temp</p><p style='font-size:20px'>"+tempMax_day[i]+"</p></div>";
         
         text7+="<div id='myModal"+i+"' class='modal fade' role='dialog'> \
                     <div class='modal-dialog'><div class='modal-content'> \

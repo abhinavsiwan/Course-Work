@@ -19,23 +19,23 @@
     <body>
             <div class="container">
                 <center><h2><b>Forecast Search</b></h2></center>
-                <div class="row ">
-                    <form class="form-inline well opacity" role="form" name="form" id="formid" method="post" action="" onsubmit="return false">
-                        <div class="form-group col-xs-12 col-sm-12 col-md-3">
+                <div class="row opacity">
+                    <form class="form-inline" role="form" name="form" id="formid" method="post" action="" onsubmit="return false">
+                        <div class="form-group col-md-3 common">
                             <label for="forecastStreetAdd">Street Address:<sup>*</sup></label><br>
-                            <input type="text" class="form-control input-sm" name="address" id="addressid" placeholder="Enter street address">
+                            <input type="text" style="width:100%;" class="form-control input-sm" name="address" id="addressid" placeholder="Enter street address">
                             <p id="errorstreet" style="color:red;font-size:12px;font-weight:bold;text-shadow:none;visibility:hidden">Please enter the street address</p>
                         </div>
                         
-                        <div class="form-group col-xs-12 col-sm-12 col-md-2">
+                        <div class="form-group col-md-2 common">
                             <label for="forecastCity">City:<sup>*</sup></label><br>
-                            <input type="text" class="form-control input-sm" name="city" id="cityid" placeholder="Enter the city name">
+                            <input type="text" style="width:100%;" class="form-control input-sm" name="city" id="cityid" placeholder="Enter the city name">
                             <p id="errorcity" style="color:red;text-shadow:none;font-size:12px;font-weight:bold;visibility:hidden">Please enter the city</p>
                         </div>
                         
-                        <div class="form-group col-xs-12 col-sm-12 col-md-2">
+                        <div class="form-group col-md-2 common">
                             <label for="forecastState">State:<sup>*</sup></label><br>
-                            <select type="state" name="state" class="form-control input-sm" id="stateid">
+                            <select type="state" style="width:100%;" name="state" class="form-control input-sm" id="stateid">
                                 <option  value="null">Select your state...</option>
                                 <option  value="AL">Albama</option>
                                 <option  value="AK">Alaska</option>
@@ -92,7 +92,7 @@
                             <p id="errorstate" style="color:red;text-shadow:none;font-size:12px;font-weight:bold;visibility:hidden;">Please enter the state</p>
                         </div>
                         
-                        <div class="form-group col-xs-12 col-sm-12 col-md-3">
+                        <div class="form-group col-md-3 degree">
                             <label for="forecastDegree">Degree:<sup>*</sup></label><br>
                             <label class="radio-inline">
                                 <input type="radio" name="degree" id="us" checked value="us">Fahrenheit
@@ -102,12 +102,12 @@
                             </label>
                         </div>
                         
-                        <div class="form-group">
+                        <div class="pull-right common" style="padding-right:10px">
                             <br>
-                            <button type="submit" id="submit" class="btn btn-primary btn-xs" value="submit"><span class="glyphicon glyphicon-search"></span> Submit</button>
-                            <button type="button" class="btn btn-default btn-xs" onclick="resetForm(this.form);"><span class="glyphicon glyphicon-refresh" style="padding-right: 8px;"></span>Clear</button>
-                            <br><br>
-                            <span style="color:white;font-size:10px;">Powered by:</span><img src="http://cs-server.usc.edu:45678/hw/hw8/images/forecast_logo.png" alt="Forecast.io img" width="80px" height="30px">
+                            <button type="submit" id="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-search"></span> Submit</button>
+                            <button type="button" class="btn btn-default btn-sm" onclick="resetForm(this.form);"><span class="glyphicon glyphicon-refresh" style="padding-right: 8px;"></span>Clear</button>
+                            <br>
+                            <span style="color:white;font-size:12px;">Powered by:</span><img src="http://cs-server.usc.edu:45678/hw/hw8/images/forecast_logo.png" alt="Forecast.io img" width="100px" height="50px">
                         </div>
                         
                     </form>
