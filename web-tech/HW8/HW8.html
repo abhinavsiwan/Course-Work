@@ -19,16 +19,18 @@
     <body>
             <div class="container">
                 <center><h2><b>Forecast Search</b></h2></center>
-                <div class="row">
-                    <form class="form-inline well opacity" role="form" name="form" id="formid" method="post" action="">
+                <div class="row ">
+                    <form class="form-inline well opacity" role="form" name="form" id="formid" method="post" action="" onsubmit="return false">
                         <div class="form-group col-xs-12 col-sm-12 col-md-3">
                             <label for="forecastStreetAdd">Street Address:<sup>*</sup></label><br>
-                            <input type="text" class="form-control input-sm" name="address" id="addressid" value="720 W 27 Street" placeholder="Enter street address">
+                            <input type="text" class="form-control input-sm" name="address" id="addressid" placeholder="Enter street address">
+                            <p id="errorstreet" style="color:red;font-size:12px;font-weight:bold;text-shadow:none;visibility:hidden">Please enter the street address</p>
                         </div>
                         
                         <div class="form-group col-xs-12 col-sm-12 col-md-2">
                             <label for="forecastCity">City:<sup>*</sup></label><br>
-                            <input type="text" class="form-control input-sm" name="city" id="cityid" value="Los Angeles" placeholder="Enter the city name">
+                            <input type="text" class="form-control input-sm" name="city" id="cityid" placeholder="Enter the city name">
+                            <p id="errorcity" style="color:red;text-shadow:none;font-size:12px;font-weight:bold;visibility:hidden">Please enter the city</p>
                         </div>
                         
                         <div class="form-group col-xs-12 col-sm-12 col-md-2">
@@ -39,7 +41,7 @@
                                 <option  value="AK">Alaska</option>
                                 <option  value="AZ">Arizona</option>
                                 <option  value="AR">Arkansas</option>
-                                <option  value="CA" selected="selected">California</option>
+                                <option  value="CA">California</option>
                                 <option  value="CO">Colorado</option>
                                 <option  value="CT">Connecticut</option>
                                 <option  value="DE">Delaware</option>
@@ -87,6 +89,7 @@
                                 <option  value="WI">Wisconsin</option>
                                 <option  value="WY">Wyoming</option>
                             </select>
+                            <p id="errorstate" style="color:red;text-shadow:none;font-size:12px;font-weight:bold;visibility:hidden;">Please enter the state</p>
                         </div>
                         
                         <div class="form-group col-xs-12 col-sm-12 col-md-3">
@@ -101,8 +104,8 @@
                         
                         <div class="form-group">
                             <br>
-                            <button type="button" class="btn btn-primary btn-xs" onclick="validate();"><span class="glyphicon glyphicon-search"></span> Submit</button>
-                            <button type="reset" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-refresh" style="padding-right: 8px;"></span>Clear</button>
+                            <button type="submit" id="submit" class="btn btn-primary btn-xs" value="submit"><span class="glyphicon glyphicon-search"></span> Submit</button>
+                            <button type="button" class="btn btn-default btn-xs" onclick="resetForm(this.form);"><span class="glyphicon glyphicon-refresh" style="padding-right: 8px;"></span>Clear</button>
                             <br><br>
                             <span style="color:white;font-size:10px;">Powered by:</span><img src="http://cs-server.usc.edu:45678/hw/hw8/images/forecast_logo.png" alt="Forecast.io img" width="80px" height="30px">
                         </div>

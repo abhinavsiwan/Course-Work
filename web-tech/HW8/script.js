@@ -1,3 +1,62 @@
+//To check if all the form tabs are filled or not. on success, calls the validate function to make an ajax call.
+$(document).ready(function() {
+ $("#submit").click(function(){
+   //alert("im here");
+       var streetaddress_fill=false;
+       var city_fill=false;
+       var state_fill=false;
+
+       var address="";
+       var city="";
+       var state="";
+ $('input[id="addressid"]').each(function() {
+     if($.trim($(this).val()) == ''){
+         $(this).css({ "border": "1px solid red"});
+        $("#errorstreet").css('visibility', 'visible');
+    }
+     else{
+         $(this).css({"border": ""});
+         $("#errorstreet").css('visibility', 'hidden');
+         streetaddress_fill=true;
+         address=$("#addressid").val();
+     }
+});
+     
+$('input[id="cityid"]').each(function() {
+    if($.trim($(this).val()) == ''){
+        $(this).css({"border": "1px solid red"});
+        $("#errorcity").css('visibility', 'visible');
+    }
+    else{
+        $(this).css({"border": ""});
+        $("#errorcity").css('visibility', 'hidden');
+        city_fill=true;
+        city=$("#cityid").val();
+    }           
+});
+     
+$('select[type="state"]').each( function() {
+    if($.trim($(this).val()) == 'null'){
+        $(this).css({ "border": "1px solid red"});
+        $("#errorstate").css('visibility', 'visible');
+    }
+    else{
+        $(this).css({ "border": ""});
+        $("#errorstate").css('visibility', 'hidden');
+        state_fill=true;
+        state=$("#stateid").val();
+    }
+});
+
+if(streetaddress_fill && city_fill && state_fill) 
+{
+    validate();
+}
+});
+});
+
+//-------------------------------------------------------------------------------------------------------------------
+//This function is called on click of submit button
 function validate() 
 {
     //alert("I am here");
@@ -8,12 +67,48 @@ function validate()
                 address: $('#addressid').val(),
                 city: $('#cityid').val(),
                 state: $('#stateid').val(),
-                degree: $('input[name=degree]:checked').val()
+                degree: $('input[name=degree]:checked').val(),
+                submit: $('#submit').val()
             },
         success: function(output) {
             transform(output);
         }
     });
+}
+
+//Clears the form and background data
+function resetForm(frm_elements)
+{
+    //alert("Im here");
+    document.getElementById("us").checked=true;
+    for (i = 0; i < frm_elements.length; i++)
+    {
+        //alert(frm_elements.length);
+        field_type = frm_elements[i].type.toLowerCase();
+        switch (field_type)
+        {
+        case "text":
+        case "password":
+        case "textarea":
+        case "hidden":
+            frm_elements[i].value = "";
+            break;
+        case "select-one":
+        case "select-multi":
+            frm_elements[i].selectedIndex = 0;
+            break;
+        default:
+            break;
+        }
+    }
+    //document.getElementById("return").innerHTML=" ";
+    document.getElementById("RightNow").innerHTML=" ";
+    document.getElementById("Next24").innerHTML=" ";
+    document.getElementById("Next7").innerHTML=" ";
+    document.getElementById("map").innerHTML=" ";
+    //Clearing the div area on account of clear form
+    /*var divelm=document.getElementById("return");
+    divelm.parentNode.removeChild(divelm); */
 }
 
 function unit_temp(temp)
@@ -194,7 +289,53 @@ function create_weathermap(long,lat)
 
 }
 
-var degree;
+
+//This function is called on click of facebook icon to post the data to Facebook
+function fb_post()
+{
+    //alert("I am here");
+    var description="Current Weather in "+city + ", " + state;
+    FB.ui(
+    {
+        method: 'feed',
+        caption:"Weather Forecast By Forecast.io",
+        description:description,
+        display:'popup',
+        link: 'https://developers.facebook.com/docs/',
+    }, 
+    function(response)
+    {
+        if(response && response.post_id)
+        {
+            alert("Posted Successfully");
+        }
+        else 
+        {
+            alert("Not Posted");
+        }
+    }
+    ); 
+}
+window.fbAsyncInit = function() {
+FB.init({
+appId      : '1152751928086077',
+xfbml      : true,
+version    : 'v2.5'
+});
+};
+(function(d, s, id){
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+
+var degree,city,state,dir;
+var weather_condition1,icon_img,temperature1;
+
+//This function is called after the ajax call is successful and returns the JSON string
 function transform(output)
 {
     //alert("I am in Transform");
@@ -203,10 +344,10 @@ function transform(output)
     var tab;
     
     //get the city from form element
-    var city=document.getElementById("cityid").value;
+    city=document.getElementById("cityid").value;
     //get the state from form element
     var e = document.getElementById("stateid");
-    var state = e.options[e.selectedIndex].value;
+    state = e.options[e.selectedIndex].value;
     
     //get the degree value
     if (document.getElementById('us').checked) 
@@ -218,7 +359,8 @@ function transform(output)
         degree="&deg; C";
     }
     
-    //For Right Now Tab
+//-----------------------------------------------------------------------------------------------------------------------
+    //For Right Now Tab - the current weather data
     //Weather Condition
     if(json_o.currently.summary!=null)
         weather_condition1=json_o.currently.summary;
@@ -235,7 +377,7 @@ function transform(output)
         temperature1="NA";
     
     //Icon
-    var dir="http://cs-server.usc.edu:45678/hw/hw8/images/";
+    dir="http://cs-server.usc.edu:45678/hw/hw8/images/";
     
     if(json_o.currently.icon!=null)
     {
@@ -336,7 +478,7 @@ function transform(output)
     
     text+="<tr style='color:white;background-color:rgb(244,125,125)'>";
     text+="<td colspan='2'>";
-    text+="<div class='col-md-6' ><p style='text-align:center;'><img width='120px' height='120px' src='"+icon_img+"'></p></div>";
+    text+="<div class='col-md-6' ><p style='text-align:center;'><img id='img_fb' width='120px' height='120px' src='"+icon_img+"'></p></div>";
     
     text+="<div class='col-md-6' style='text-align:center'><span style='color:white;font-size:16px;font-weight:bold;'>"+weather_condition1+" in "+city+", "+state+"</span><br/>";
     
@@ -346,7 +488,7 @@ function transform(output)
     
     text+="<span style='font-size:10pt;color:green;font-weight:bold;'>H:"+tempMi+"&deg;<sup style='vertical-align:super;'></sup></span>";
     
-    text+="<span style='text-align:right;float:right;'><img src='"+fb_icon+"' alt='FB icon' width='30px' height='30px'></span>";
+    text+="<span style='text-align:right;float:right;'><a href='javascript:fb_post();'><img src='"+fb_icon+"' alt='FB icon' width='30px' height='30px'></a></span>";
     
     text+="</div></td></tr>";
     
@@ -364,10 +506,12 @@ function transform(output)
     document.getElementById("RightNow").innerHTML=text;
     
     //Creating the weather map
-    //document.getElementById("RightNow").innerHTML=create_weathermap(json_o.longitude,json_o.latitude);
-    create_weathermap(json_o.longitude,json_o.latitude);
-   
-    
+    //Map will be loaded only when the rightnow tab is active
+    if ($('#rightnow').parent().hasClass('active'))
+    {
+        create_weathermap(json_o.longitude,json_o.latitude);
+    }
+//--------------------------------------------------------------------------------------------------------------------  
     //24 Hours data calculation
     if(json_o.hourly.summary!=null)
         weather_condition2=json_o.hourly.summary;
@@ -503,9 +647,10 @@ function transform(output)
     }
     document.getElementById("Next24").innerHTML=text24;
 
-
-    //For Next7 days tab
-    //Day
+//--------------------------------------------------------------------------------------------------------------------
+    //For Next7 days tab - Next 7 days weather data
+    
+    //convert the unix timestamp to get the month,day and date
     var monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
     var daynames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     
@@ -688,4 +833,5 @@ function transform(output)
     }
     text7+="<div class='col-md-3'></div>";
     document.getElementById("Next7").innerHTML=text7;
+        
 }

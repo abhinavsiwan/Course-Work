@@ -1,14 +1,33 @@
 <?php
     //echo("Hello");
     $add=$cit=$stat=$degr=" ";
-    if(trim($_POST["address"])!=null && trim($_POST["city"])!=null && $_POST["state"]!=null && $_POST["degree"]!=null)
+    if (isset($_POST["submit"]))
     {
-//rawurlencode -Returns a string in which all non-alphanumeric characters except -_.~ have been replaced with a percent     //(%) sign followed by two hex digits
-        $add=rawurlencode($_POST["address"]);
-        $cit=rawurlencode($_POST["city"]);
-        $stat=rawurlencode($_POST["state"]);
-        $degree=$_POST["degree"];
+        if(trim($_POST["address"])!=null && trim($_POST["city"])!=null && $_POST["state"]!=null && $_POST["degree"]!=null)
+        {
+    //rawurlencode -Returns a string in which all non-alphanumeric characters except -_.~ have been replaced with a percent     //(%) sign followed by two hex digits
+            $add=rawurlencode($_POST["address"]);
+            $cit=rawurlencode($_POST["city"]);
+            $stat=rawurlencode($_POST["state"]);
+            $degree=$_POST["degree"];
+        }
+    }
 
+    else if(isset($_GET["submit"]))
+    {
+        if(trim($_GET["address"])!=null && trim($_GET["city"])!=null && $_GET["state"]!=null && $_GET["degree"]!=null)
+        {
+            $add=rawurlencode($_GET["address"]);
+            $cit=rawurlencode($_GET["city"]);
+            $stat=rawurlencode($_GET["state"]);
+            $degree=$_GET["degree"];
+        }
+    }
+
+    else
+    {
+        echo ("Data Not present");
+    }
         $key="AIzaSyBpcDmxs6RennrmVko-pJ4V1HC6VzLIV4c";
         $url="https://maps.google.com/maps/api/geocode/xml?address=".$add.",".$cit.",".$stat."&key=".$key;
         //echo($url)."<br>";
@@ -63,6 +82,5 @@
             echo ("<p class=\"error\">Error message: ") . $e->getMessage()."</p>";
             echo ("</div>");
         }
-    }
 
 ?>

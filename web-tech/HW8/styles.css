@@ -11,6 +11,8 @@ body {
     background-color: rgba(0,0,0,0.3);
     color: white;
     border: none;
+    margin:15px;
+    height:auto;
 }
 
 hr {margin: -2px 0px 0px 0px;}
@@ -18,6 +20,7 @@ hr {margin: -2px 0px 0px 0px;}
 sup { color:red;}
 
 #return { visibility: hidden;}
+
 #return ul li.active a { 
     color:white;
     background: #3176B1;}
@@ -35,19 +38,6 @@ sup { color:red;}
 #Next7 {
     background-color: black;
 }
-
-.one { background: #FF9999;
-        margin:0px 0px 0px -15px;
-        width:570px;
-    }
-
-.one th, .one td { 
-     border-top: none !important; 
- }
-
-.two { margin:-10px 0px 0px -15px;
-    width:570px;
-    }
 
 #modal0 { background-color: #0066CC;
             margin: 10px 0px 10px 10px;
@@ -113,3 +103,5 @@ sup { color:red;}
 
 #map {height:450px;
 }
+
+.move { float: right;}
