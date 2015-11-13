@@ -14,6 +14,8 @@
         
         <script type="text/javascript" src="script.js"></script>
         <script src="http://openlayers.org/api/OpenLayers.js"></script>
+        <script type="text/javascript" src="moment.js"></script>
+        <script type="text/javascript" src="moment-timezone-with-data.js"></script>
     </head>
     
     <body>
@@ -107,7 +109,7 @@
                             <button type="submit" id="submit" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-search"></span> Submit</button>
                             <button type="button" class="btn btn-default btn-sm" onclick="resetForm(this.form);"><span class="glyphicon glyphicon-refresh" style="padding-right: 8px;"></span>Clear</button>
                             <br>
-                            <span style="color:white;font-size:12px;">Powered by:</span><img src="http://cs-server.usc.edu:45678/hw/hw8/images/forecast_logo.png" alt="Forecast.io img" width="100px" height="50px">
+                            <span style="color:white;font-size:12px;">Powered by:</span><a href="http://forecast.io/" target="_blank"><img src="http://cs-server.usc.edu:45678/hw/hw8/images/forecast_logo.png" alt="Forecast.io img" width="100px" height="50px"></a>
                         </div>
                         
                     </form>

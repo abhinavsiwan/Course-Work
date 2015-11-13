@@ -11,7 +11,7 @@ $(document).ready(function() {
        var state="";
  $('input[id="addressid"]').each(function() {
      if($.trim($(this).val()) == ''){
-         $(this).css({ "border": "1px solid red"});
+         //$(this).css({ "border": "1px solid red"});
         $("#errorstreet").css('visibility', 'visible');
     }
      else{
@@ -24,7 +24,7 @@ $(document).ready(function() {
      
 $('input[id="cityid"]').each(function() {
     if($.trim($(this).val()) == ''){
-        $(this).css({"border": "1px solid red"});
+        //$(this).css({"border": "1px solid red"});
         $("#errorcity").css('visibility', 'visible');
     }
     else{
@@ -37,7 +37,7 @@ $('input[id="cityid"]').each(function() {
      
 $('select[type="state"]').each( function() {
     if($.trim($(this).val()) == 'null'){
-        $(this).css({ "border": "1px solid red"});
+        //$(this).css({ "border": "1px solid red"});
         $("#errorstate").css('visibility', 'visible');
     }
     else{
@@ -50,10 +50,56 @@ $('select[type="state"]').each( function() {
 
 if(streetaddress_fill && city_fill && state_fill) 
 {
-    validate();
+    $.ajax({
+        url: 'http://usc2015-env.elasticbeanstalk.com/',
+        type: 'post',
+        data: {
+                address: $('#addressid').val(),
+                city: $('#cityid').val(),
+                state: $('#stateid').val(),
+                degree: $('input[name=degree]:checked').val(),
+                submit: $('#submit').val()
+            },
+        success: function(output) {
+            transform(output);
+        }
+    });
 }
+}); // end of submit
+
+$("#addressid").keyup( function() {
+    if($.trim($(this).val()) == ''){
+        //$(this).css({ "border": "1px solid red"});
+        $("#errorstreet").css('visibility', 'visible');
+    }
+    else{
+        $(this).css({ "border": ""});
+        $("#errorstreet").css('visibility', 'hidden');
+    }
 });
+    
+$("#cityid").keyup( function() {
+    if($.trim($(this).val()) == ''){
+        //$(this).css({ "border": "1px solid red"});
+        $("#errorcity").css('visibility', 'visible');
+    }
+    else{
+        $(this).css({ "border": ""});
+        $("#errorcity").css('visibility', 'hidden'); 
+    }
+}); 
+    
+$("#stateid").change( function() {
+    if($.trim($(this).val()) == 'null'){
+        //$(this).css({ "border": "1px solid red"});
+        $("#errorstate").css('visibility', 'visible');
+    }
+    else{
+        $(this).css({ "border": ""});
+        $("#errorstate").css('visibility', 'hidden');
+    }
 });
+});//end of document ready
 
 //-------------------------------------------------------------------------------------------------------------------
 //This function is called on click of submit button
@@ -105,6 +151,9 @@ function resetForm(frm_elements)
     document.getElementById("return").style.visibility="hidden";
     $('a[href="#page1"]').tab('show');
     document.getElementById("map").innerHTML=" ";
+    $("#errorstate").css('visibility', 'hidden');
+    $("#errorcity").css('visibility', 'hidden');
+    $("#errorstreet").css('visibility', 'hidden');
 }
 
 function unit_temp(temp)
@@ -279,10 +328,10 @@ function create_weathermap(long,lat)
         }
     );
     
-    //map.addLayers([mapnik, layer_precipitation, layer_cloud]);
-    //map.setCenter(position, zoom );
+    map.addLayers([mapnik, layer_precipitation, layer_cloud]);
+    map.setCenter(position, zoom );
     
-    try
+    /*try
     {
         map.addLayers([mapnik, layer_precipitation, layer_cloud]);
         map.setCenter(position, zoom );
@@ -298,6 +347,7 @@ function create_weathermap(long,lat)
             }
         });
     } 
+    */
 }
 
 
@@ -349,6 +399,14 @@ version    : 'v2.5'
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 
+//-------------------------------------------------------------------------------------------------------------------------
+function convertTime(time,timezone)
+{
+    var format = 'hh:mm A';
+    var mytime = moment(time * 1000).tz(timezone).format(format);
+      //  alert("myalert"+mytime)
+    return mytime;
+}
 //------------------------------------------------------------------------------------------------------------------------
 
 var degree,city,state,dir;
@@ -359,7 +417,7 @@ function transform(output)
 {
     //alert("I am in Transform");
     document.getElementById("return").style.visibility="visible";
-    //$('a[href="#page1"]').tab('show');
+    $('a[href="#page1"]').tab('show');
     document.getElementById("map").innerHTML=" ";
     
     var json_o=JSON.parse(output);
@@ -464,7 +522,8 @@ function transform(output)
     //Sunrise
     if(json_o.daily.data[0].sunriseTime!=null)
     {
-        sunrise1=convertTimestamp(json_o.daily.data[0].sunriseTime);
+        //sunrise1=convertTimestamp(json_o.daily.data[0].sunriseTime);
+        sunrise1=convertTime(json_o.daily.data[0].sunriseTime,json_o.timezone);
     }
     else
         sunrise1="NA";
@@ -472,7 +531,8 @@ function transform(output)
     //Sunset
     if(json_o.daily.data[0].sunsetTime!=null)
     {
-        sunset1=convertTimestamp(json_o.daily.data[0].sunsetTime);
+        //sunset1=convertTimestamp(json_o.daily.data[0].sunsetTime);
+        sunset1=convertTime(json_o.daily.data[0].sunsetTime,json_o.timezone);
     }
     else
         sunset1="NA";
@@ -547,7 +607,10 @@ function transform(output)
     for(i=0;i<24;i++)
     {
         if(json_o.hourly.data[i+1].time!=null)
-            time[i]=convertTimestamp(json_o.hourly.data[i+1].time);
+        {
+            //time[i]=convertTimestamp(json_o.hourly.data[i+1].time);
+            time[i]=convertTime(json_o.hourly.data[i+1].time,json_o.timezone);
+        }
         else
             time[i]="NA";
     }
@@ -746,7 +809,8 @@ function transform(output)
     {
         if(json_o.daily.data[i+1].sunriseTime!=null)
         {
-            sunrise_day[i]=convertTimestamp(json_o.daily.data[i+1].sunriseTime);
+            //sunrise_day[i]=convertTimestamp(json_o.daily.data[i+1].sunriseTime);
+            sunrise_day[i]=convertTime(json_o.daily.data[i+1].sunriseTime,json_o.timezone);
         }
         else
             sunrise_day[i]="NA";
@@ -758,7 +822,8 @@ function transform(output)
     {
         if(json_o.daily.data[i+1].sunsetTime!=null)
         {
-            sunset_day[i]=convertTimestamp(json_o.daily.data[i+1].sunsetTime);
+            //sunset_day[i]=convertTimestamp(json_o.daily.data[i+1].sunsetTime);
+            sunset_day[i]=convertTime(json_o.daily.data[i+1].sunsetTime,json_o.timezone);
         }
         else
             sunset_day[i]="NA";
@@ -840,12 +905,28 @@ function transform(output)
                         <div class='modal-body'> \
                             <p style='text-align: center;'><img src='"+icon_day[i]+"' alt='Icon Pic' width='130px' height='130px'></p><br/> \
                             <h4 style='text-align:center'><span style='font-size:20px;font-weight:bold;'>"+day[i]+"</span>: <span style='color:#FF9900;font-size:20px;font-weight:bold;'>"+summary_day[i]+"</span></h4> \
-                            <table class='table table_day'> \
-                                <tr><th style='text-align:center;font-size:20px;font-weight:bold;'>Sunrise Time</th><th style='text-align:center;font-size:20px;'>Sunset Time</th><th style='text-align:center;font-size:20px;'>Humidity</th></tr> \
-                                <tr><td>"+sunrise_day[i]+"</td><td>"+sunset_day[i]+"</td><td>"+humid_day[i]+" \
-                                <tr><th style='text-align:center;font-size:20px;'>Wind Speed</th><th style='text-align:center;font-size:20px;'>Visibility</th><th style='text-align:center;font-size:20px;'>Pressure</th></tr> \
-                                <tr><td>"+Windspd_day[i]+"</td><td>"+visi_day[i]+"</td><td>"+press_day[i]+" \
-                            </table> \
+                            <div class='row' style='text-align:center;'> \
+                                <div class='col-md-4'> \
+                                   <span style='font-size:18px;font-weight:bold;'>Sunrise Time</span><br>"+sunrise_day[i]+"\
+                                </div> \
+                                <div class='col-md-4'> \
+                                    <span style='font-size:18px;font-weight:bold;'>Sunset Time</span><br>"+sunset_day[i]+" \
+                                </div> \
+                                <div class='col-md-4'> \
+                                    <span style='font-size:18px;font-weight:bold;'>Humidity </span><br>"+humid_day[i]+" \
+                                </div> \
+                            </div> \
+                            <div class='row' style='text-align:center;'> \
+                                <div class='col-md-4'> \
+                                   <span style='font-size:18px;font-weight:bold;'>Wind Speed</span><br>"+Windspd_day[i]+"\
+                                </div> \
+                                <div class='col-md-4'> \
+                                    <span style='font-size:18px;font-weight:bold;'>Visibility</span><br>"+visi_day[i]+"<br>"+" \
+                                </div> \
+                                <div class='col-md-4'> \
+                                    <span style='font-size:18px;font-weight:bold;'>Pressure</span><br>"+press_day[i]+"<br>"+" \
+                                </div> \
+                            </div> \
                         </div> \
                         <div class='modal-footer'> \
                             <button type='button' class='btn btn-default' data-dismiss='modal'>Close</button> \
