@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity"
+    android:background="@drawable/bg">
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Header"
+        android:id="@+id/tvHeader"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="44dp"
+        android:textSize="32sp"
+        android:gravity="center"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/Street"
+        android:id="@+id/tvStreet"
+        android:layout_below="@+id/tvHeader"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="40dp"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etStreet"
+        android:layout_alignBottom="@+id/tvStreet"
+        android:layout_toRightOf="@+id/tvStreet"
+        android:layout_toEndOf="@+id/tvStreet"
+        android:layout_marginLeft="20sp"
+        android:layout_marginTop="20sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/city"
+        android:id="@+id/tvCity"
+        android:layout_below="@+id/tvStreet"
+        android:layout_marginTop="30dp"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etCity"
+        android:layout_alignBottom="@+id/tvCity"
+        android:layout_toRightOf="@+id/tvStreet"
+        android:layout_toEndOf="@+id/tvStreet"
+        android:layout_marginLeft="20sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/state"
+        android:id="@+id/tvState"
+        android:layout_below="@+id/tvCity"
+        android:layout_marginTop="30dp"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+    <Spinner
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/StateSpinner"
+        android:layout_below="@+id/etCity"
+        android:layout_toRightOf="@+id/tvStreet"
+        android:layout_toEndOf="@id/tvStreet"
+        android:layout_marginTop="35sp"
+        android:layout_marginLeft="20sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/degree"
+        android:id="@+id/tvDegree"
+        android:layout_below="@+id/tvState"
+        android:layout_marginTop="30dp"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3"
+        android:orientation="horizontal"
+        android:layout_alignTop="@+id/tvDegree"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignLeft="@+id/StateSpinner"
+        android:layout_alignStart="@+id/StateSpinner"
+        android:id="@+id/radioTemp">
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/us"
+            android:id="@+id/rbFah"
+            android:checked="true"/>
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/si"
+            android:id="@+id/rbCel"/>
+
+    </RadioGroup>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/submit"
+        android:id="@+id/btSearch"
+        android:layout_below="@+id/radioTemp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="submitForm"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/clear"
+        android:id="@+id/btClear"
+        android:layout_alignTop="@+id/btSearch"
+        android:layout_centerHorizontal="true"
+        android:onClick="clearForm"/>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/about"
+        android:id="@+id/btAbout"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="40dp"
+        android:onClick="sendInfo"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/powered"
+        android:id="@+id/tvPowered"
+        android:layout_alignTop="@+id/btAbout"
+        android:layout_alignRight="@+id/radioTemp"
+        android:layout_alignEnd="@+id/radioTemp"
+        android:textSize="18sp"/>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ivImage"
+        android:layout_alignRight="@+id/tvPowered"
+        android:layout_alignEnd="@+id/tvPowered"
+        android:layout_toRightOf="@+id/btClear"
+        android:layout_toEndOf="@+id/btClear"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/tvPowered"
+        android:src="@drawable/forecast_logo"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/etError"
+        android:layout_above="@+id/tvPowered"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"
+        android:textColor="#F00"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_margin="@dimen/activity_vertical_margin"/>
+</RelativeLayout>
