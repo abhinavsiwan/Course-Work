@@ -42,7 +42,8 @@
         android:layout_toRightOf="@+id/tvStreet"
         android:layout_toEndOf="@+id/tvStreet"
         android:layout_marginLeft="20sp"
-        android:layout_marginTop="20sp"/>
+        android:layout_marginTop="20sp"
+        android:text="720 W27 Street"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -61,7 +62,8 @@
         android:layout_alignBottom="@+id/tvCity"
         android:layout_toRightOf="@+id/tvStreet"
         android:layout_toEndOf="@+id/tvStreet"
-        android:layout_marginLeft="20sp"/>
+        android:layout_marginLeft="20sp"
+        android:text="Los Angeles"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -81,7 +83,8 @@
         android:layout_toRightOf="@+id/tvStreet"
         android:layout_toEndOf="@id/tvStreet"
         android:layout_marginTop="35sp"
-        android:layout_marginLeft="20sp" />
+        android:layout_marginLeft="20sp"
+        android:entries="@array/state_list"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -180,9 +183,8 @@
         android:id="@+id/etError"
         android:layout_above="@+id/tvPowered"
         android:layout_centerHorizontal="true"
-        android:visibility="invisible"
         android:textColor="#F00"
         android:textSize="18sp"
-        android:textStyle="bold"
+        android:textStyle="normal"
         android:layout_margin="@dimen/activity_vertical_margin"/>
 </RelativeLayout>

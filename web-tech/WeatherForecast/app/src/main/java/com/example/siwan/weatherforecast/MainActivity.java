@@ -1,14 +1,16 @@
 package com.example.siwan.weatherforecast;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,11 +22,19 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+
+
 public class MainActivity extends AppCompatActivity {
 
-    //public final static String EXTRA_MESSAGE = "com.example.siwan.weatherforecast.MESSAGE";
-    private String[] states;
-    private Spinner spinner;
+    public final static String EXTRA_MESSAGE = "com.example.siwan.weatherforecast.MESSAGE";
 
     private RadioGroup radioTempGroup;
     private RadioButton radioTempButton;
@@ -34,48 +44,27 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText textStreet;
     private EditText textCity;
+    private Spinner spinnerState;
 
-    private TextView ErrorStreet;
+    private TextView error;
+    String jsonResult="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Attach a click Listener for Drop-Down Menu - Spinner
-        addListenerOnSpinner();
+        textStreet = (EditText) findViewById(R.id.etStreet);
+        textCity = (EditText) findViewById(R.id.etCity);
+        spinnerState = (Spinner) findViewById(R.id.StateSpinner);
+        radioTempGroup = (RadioGroup) findViewById(R.id.radioTemp);
+        error = (TextView) findViewById(R.id.etError);
+        btnSearch = (Button) findViewById(R.id.btSearch);
 
         //Attach a click Listener for Forecast.io
         addListenerOnImage();
 
     }
-
-    //Click Listener for Drop-Down Menu - Spinner
-    private void addListenerOnSpinner() {
-        states = getResources().getStringArray(R.array.state_list);
-        spinner = (Spinner) findViewById(R.id.StateSpinner);
-
-        ArrayAdapter<String> dataAdadpter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,states);
-        dataAdadpter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spinner.setAdapter(dataAdadpter);
-
-        //Check if this code is required
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //int item = spinner.getSelectedItemPosition();
-                //String text = spinner.getSelectedItem().toString();
-                //Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-    }
-
 
     //Click Listener for Forecast.io Image
     private void addListenerOnImage() {
@@ -92,142 +81,211 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //Called when the user clicks the ABOUT button
     //Creates an Intent and send to DisplayAboutInfo activity
     public void sendInfo(View view) {
-        Intent intent = new Intent(this,DisplayAboutInfo.class);
-        //textStreet = (EditText) findViewById(R.id.etStreet);
-        //String message = textStreet.getText().toString();
-        //intent.putExtra(EXTRA_MESSAGE, message);
+        Intent intent = new Intent(this, DisplayAboutInfo.class);
         startActivity(intent);
     }
 
-    //Called when the user clicks the Clear Button
+    //Clear the Form - Called when the user clicks the Clear Button
     public void clearForm(View view) {
-        //clears the Street editText
-        textStreet = (EditText) findViewById(R.id.etStreet);
         textStreet.setText("");
-
-        //clears the City editeText
-        textCity = (EditText) findViewById(R.id.etCity);
         textCity.setText("");
-
-        //set the State Spinner to default
-        addListenerOnSpinner();
-
-        //set the Radio Button to default
-        radioTempGroup = (RadioGroup) findViewById(R.id.radioTemp);
+        spinnerState.setSelection(0);
         radioTempGroup.check(R.id.rbFah);
-
-        //Clears the Error TextView Box
-        ErrorStreet = (TextView) findViewById(R.id.etError);
-        ErrorStreet.setVisibility(View.INVISIBLE);
+        error.setText("");
     }
 
-    //Called when the user clicks the Search Button
+    //Validation - Called when the user clicks the Search Button
     public void submitForm(View view) {
-            String address = "";
-            String city = "";
-            String state = "";
+        String address = "";
+        String city = "";
+        String stat = "";
+        String degree = "";
+        //variable to get the return value after validation
+        boolean resultValidate;
 
-            //variable to get the return value after validation
-            boolean resultValidate;
+        degree = getDegree();
+        /*
+        int selectedId = radioTempGroup.getCheckedRadioButtonId();
+        radioTempButton = (RadioButton) findViewById(selectedId);
+        String deg = (String) radioTempButton.getText();
+        if(deg.toString().equals("Fahrenheit")) {
+            degree = "us";
+        }
+        if(deg.toString().equals("Celsius")) {
+            degree = "si";
+        }
+        */
+        address = String.valueOf(textStreet.getText()).trim();
+        city = String.valueOf(textCity.getText()).trim();
 
-            //get the value of radio button
-            radioTempGroup = (RadioGroup) findViewById(R.id.radioTemp);
-            //get selected button from radioGroup
-            int selectedId =  radioTempGroup.getCheckedRadioButtonId();
-            //find the radio button by returned id
-            radioTempButton = (RadioButton) findViewById(selectedId);
-            String degree = (String) radioTempButton.getText();
+        stat = spinnerState.getSelectedItem().toString();
+        int state_spin = (int) spinnerState.getSelectedItemId();
 
-            //get the value of Street edittext
-            textStreet = (EditText) findViewById(R.id.etStreet);
-            address = String.valueOf(textStreet.getText()).trim();
+        String submit = String.valueOf(btnSearch.getText());
 
-            //get the value of city edittext
-            textCity = (EditText) findViewById(R.id.etCity);
-            city = String.valueOf(textCity.getText()).trim();
+        resultValidate = validate(address, city, state_spin);
 
-            //get the value of State spinner
-            spinner=(Spinner) findViewById(R.id.StateSpinner);
-            state = spinner.getSelectedItem().toString();
-            int state_spin = (int) spinner.getSelectedItemId();
+        if (resultValidate) {
+            error.setText("");
+            /*
+            Toast.makeText(getApplicationContext(), address, Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, city, Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, stat, Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, degree, Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, submit, Toast.LENGTH_SHORT).show();
+            */
 
-            //get the value of SEARCH button
-            btnSearch = (Button) findViewById(R.id.btSearch);
-            String submit = String.valueOf(btnSearch.getText());
-
-            resultValidate = validate(address, city, state_spin);
-
-            if(resultValidate) {
-                ErrorStreet.setVisibility(View.INVISIBLE);
-                Toast.makeText(getApplicationContext(), address, Toast.LENGTH_SHORT).show();
-                Toast.makeText(MainActivity.this, city, Toast.LENGTH_SHORT).show();
-                Toast.makeText(MainActivity.this, state, Toast.LENGTH_SHORT).show();
-                Toast.makeText(MainActivity.this, degree, Toast.LENGTH_SHORT).show();
-                Toast.makeText(MainActivity.this, submit, Toast.LENGTH_SHORT).show();
+            // When user clicks the search button, calls AsyncTask.
+            // Before attempting to fetch the URL, makes sure that there is a network connection.
+            ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+            if(networkInfo != null && networkInfo.isConnected())
+            {
+                //fetch JSON data
+                new GETJSONTask().execute(address,city,stat,degree,submit);
             }
+            else
+            {
+                //display error
+                error.setText("Network Connectivity not available !!!");
+            }
+        }
 
+    }
+
+    private String getDegreeUnit() {
+        String degreeUnit = "";
+        int selectedId = radioTempGroup.getCheckedRadioButtonId();
+        radioTempButton = (RadioButton) findViewById(selectedId);
+        String deg = (String) radioTempButton.getText();
+        if(deg.toString().equals("Fahrenheit")) {
+            degreeUnit = "\u2109";
+        }
+        if(deg.toString().equals("Celsius")) {
+            degreeUnit = "\u2103";
+        }
+
+        return degreeUnit;
+    }
+
+
+    private String getDegree() {
+        String degree = "";
+        int selectedId = radioTempGroup.getCheckedRadioButtonId();
+        radioTempButton = (RadioButton) findViewById(selectedId);
+        String deg = (String) radioTempButton.getText();
+        if(deg.toString().equals("Fahrenheit")) {
+            degree = "us";
+        }
+        if(deg.toString().equals("Celsius")) {
+            degree = "si";
+        }
+
+        return degree;
+    }
+
+    private class GETJSONTask extends AsyncTask<String, Void, String> {
+        //private ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+        String url = "http://usc2015-env.elasticbeanstalk.com/?address=";
+        String mTAG = "myAsyncTask";
+
+        protected String doInBackground(String... urls) {
+            Log.d(mTAG, "Background Work in Progress");
+            try {
+                url=url+ URLEncoder.encode(urls[0], "UTF-8");
+                url=url+"&city=";
+                url=url+URLEncoder.encode(urls[1], "UTF-8");
+                url=url+"&state=";
+                url=url+URLEncoder.encode(urls[2], "UTF-8");
+                url=url+"&degree=";
+                url=url+URLEncoder.encode(urls[3], "UTF-8");
+                url=url+"&submit=";
+                url=url+URLEncoder.encode(urls[4], "UTF-8");
+                return downloadUrl(url);
+            } catch (IOException e) {
+                return "Unable to retrieve web page. URL may be invalid.";
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            try {
+                //JSONObject results = new JSONObject(result);
+                Intent resultActivity = new Intent(getApplicationContext(),ResultActivity.class);
+                resultActivity.putExtra("result", result);
+                resultActivity.putExtra("state", spinnerState.getSelectedItem().toString());
+                resultActivity.putExtra("city", textCity.getText().toString().trim());
+                resultActivity.putExtra("degree", getDegree());
+                resultActivity.putExtra("unit", getDegreeUnit());
+                startActivity(resultActivity);
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        private String downloadUrl(String myurl) throws IOException {
+            InputStream is = null;
+            // Only display the first 500 characters of the retrieved
+            // web page content.
+            //int len = 500;
+            try {
+                URL url = new URL(myurl);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(10000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("GET");
+                conn.setDoInput(true);
+                // Starts the query
+                conn.connect();
+                int response = conn.getResponseCode();
+                Log.d(mTAG, "The response is: " + response);
+                is = conn.getInputStream();
+
+                // Convert the InputStream into a string
+                String contentAsString = readIt(is);
+                return contentAsString;
+
+                // Makes sure that the InputStream is closed after the app is
+                // finished using it.
+            } finally {
+                if (is != null) {
+                    is.close();
+                }
+            }
+        }
+        public String readIt(InputStream stream) throws IOException, UnsupportedEncodingException {
+            Reader reader = null;
+            reader = new InputStreamReader(stream, "UTF-8");
+            StringBuilder output = new StringBuilder();
+            char[] buffer = new char[1000];
+            for(;;) {
+                int abh = reader.read(buffer, 0, buffer.length);
+                if(abh < 0)
+                    break;
+                output.append(buffer, 0, abh);
+            }
+            return output.toString();
+        }
     }
 
     //Called when validate function is called from SubmitForm
     public boolean validate(String address, String city, int state_spin) {
-        boolean address_fill = false;
-        boolean city_fill = false;
-        boolean state_fill = false;
-
-        String errorText ="Please Enter a ";
-        if(!address.equals(""))
-        {
-            address_fill = true;
-        }
-        if(!city.equals(""))
-        {
-            city_fill = true;
-        }
-        if(state_spin !=0)
-        {
-            state_fill = true;
-        }
-
-        if(!address_fill)
-        {
-            errorText += "street address";
-        }
-
-        if(!city_fill)
-        {
-            if(address_fill) {
-                errorText += "City";
-            }
-            else {
-                errorText += "";
-            }
-        }
-
-        if(!state_fill)
-        {
-            if(address_fill && city_fill)
-            {
-                errorText += "State";
-            }
-            else
-            {
-                errorText += "";
-            }
-        }
-        if(!address_fill || !city_fill || !state_fill)
-        {
-            ErrorStreet = (TextView) findViewById(R.id.etError);
-            ErrorStreet.setVisibility(View.VISIBLE);
-            ErrorStreet.setText(errorText);
+        error.setText("");
+        if (address.isEmpty()) {
+            error.setText("Please enter a Street Address");
             return false;
         }
-        if(address_fill && city_fill && state_fill)
-        {
-            return true;
+        if (city.isEmpty()) {
+            error.setText("Please enter a City");
+            return false;
         }
-        return Boolean.parseBoolean(null);
+        if (state_spin == 0) {
+            error.setText("Please select a State");
+            return false;
+        }
+        return true;
     }
 }
