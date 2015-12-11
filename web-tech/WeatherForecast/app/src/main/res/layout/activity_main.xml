@@ -42,8 +42,7 @@
         android:layout_toRightOf="@+id/tvStreet"
         android:layout_toEndOf="@+id/tvStreet"
         android:layout_marginLeft="20sp"
-        android:layout_marginTop="20sp"
-        android:text="720 W27 Street"/>
+        android:layout_marginTop="20sp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -62,8 +61,7 @@
         android:layout_alignBottom="@+id/tvCity"
         android:layout_toRightOf="@+id/tvStreet"
         android:layout_toEndOf="@+id/tvStreet"
-        android:layout_marginLeft="20sp"
-        android:text="Los Angeles"/>
+        android:layout_marginLeft="20sp"/>
 
     <TextView
         android:layout_width="wrap_content"

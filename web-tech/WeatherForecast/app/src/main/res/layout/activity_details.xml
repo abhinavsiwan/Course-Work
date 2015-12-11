@@ -42,7 +42,7 @@
                     android:background="@drawable/detailbutton"
                     android:textOn="NEXT 24 HOURS"
                     android:textOff="NEXT 24 HOURS"
-                    android:onClick="toggle7Days"
+                    android:onClick="toggle24Hours"
                     android:checked="true"
                     android:id="@+id/hourbtn24"
                     android:layout_height="30dp" />
@@ -53,7 +53,7 @@
                     android:textOn="NEXT 7 DAYS"
                     android:textOff="NEXT 7 DAYS"
                     android:background="@drawable/detailbutton"
-                    android:onClick="toggle24Hours"
+                    android:onClick="toggle7Days"
                     android:id="@+id/daybtn7"
                     android:layout_alignRight="@+id/hourbtn"/>
 
@@ -82,7 +82,9 @@
                             android:id="@+id/hour_time"
                             android:textStyle="bold"
                             android:textSize="22sp"
-                            android:text="Time" />
+                            android:text="Time"
+                            android:layout_column="0"
+                            android:paddingLeft="5sp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -91,7 +93,8 @@
                             android:id="@+id/hour_summary"
                             android:textStyle="bold"
                             android:textSize="22sp"
-                            android:text="Summary"/>
+                            android:text="Summary"
+                            android:layout_column="1"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -101,7 +104,8 @@
                             android:textStyle="bold"
                             android:textSize="22sp"
                             android:text="Temp"
-                            android:paddingRight="5sp"/>
+                            android:paddingRight="5sp"
+                            android:layout_column="2"/>
 
                     </TableRow>
 

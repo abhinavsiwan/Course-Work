@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -91,7 +92,7 @@ public class DetailsActivity extends AppCompatActivity {
                 ImageView img1 = (ImageView) row.findViewById(R.id.img_hour);
                 t1.setId(View.generateViewId());
                 t1.setText(convertTime24hours(Integer.parseInt(((JSONObject) hour_data.get(i)).getString("time"))));
-                //t1.setText("Time");
+                //t1.setText(time);
                 t2.setId(View.generateViewId());
                 t2.setText("" + ((JSONObject) hour_data.get(i)).getInt("temperature"));
                 //t2.setText("Temp");
@@ -210,17 +211,33 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
-    public void toggle7Days(View view) {
-        ((RelativeLayout) findViewById(R.id.next24Hours)).setVisibility(View.VISIBLE);
-        ((RelativeLayout) findViewById(R.id.next7Days)).setVisibility(View.GONE);
-        //((Button) findViewById(R.id.hourbtn24)).setSelected(true);
-        //((Button) findViewById(R.id.daybtn7)).setSelected(false);
+    public void toggle24Hours(View view) {
+        ToggleButton daybtn = (ToggleButton) findViewById(R.id.daybtn7);
+        ToggleButton hourbtn = (ToggleButton) findViewById(R.id.hourbtn24);
+
+        if(hourbtn.isChecked()) {
+            ((RelativeLayout) findViewById(R.id.next24Hours)).setVisibility(View.VISIBLE);
+            ((RelativeLayout) findViewById(R.id.next7Days)).setVisibility(View.GONE);
+            hourbtn.setChecked(true);
+            daybtn.setChecked(false);
+        }
+        else {
+            daybtn.setChecked(true);
+        }
     }
 
-    public void toggle24Hours(View view) {
-        ((RelativeLayout) findViewById(R.id.next24Hours)).setVisibility(View.GONE);
-        ((RelativeLayout) findViewById(R.id.next7Days)).setVisibility(View.VISIBLE);
-        //((Button) findViewById(R.id.hourbtn24)).setSelected(false);
-        //((Button) findViewById(R.id.daybtn7)).setSelected(true);
+    public void toggle7Days(View view) {
+        ToggleButton daybtn = (ToggleButton) findViewById(R.id.daybtn7);
+        ToggleButton hourbtn = (ToggleButton) findViewById(R.id.hourbtn24);
+
+        if(daybtn.isChecked()) {
+            ((RelativeLayout) findViewById(R.id.next24Hours)).setVisibility(View.GONE);
+            ((RelativeLayout) findViewById(R.id.next7Days)).setVisibility(View.VISIBLE);
+            hourbtn.setChecked(false);
+            daybtn.setChecked(true);
+        }
+        else {
+            hourbtn.setChecked(true);
+        }
     }
 }
