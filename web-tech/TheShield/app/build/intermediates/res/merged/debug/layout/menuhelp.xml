@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background1" 
+    android:orientation="vertical">
+    
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+<LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+ 
+        
+	
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold|italic"
+        android:text="Features of this application:"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold|italic"
+        android:text="1.When you want to Switch on your mobile from silent mode to General mode via message.\n2.When you want to Switch on your mobile Wi-Fi mode.\n3.When you want to know the location of your mobile(When lost).\n4.To backup your Keywords and Password to a particular pre-defined number(Need to enter during registering into the app)."
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Detailed Explanation:"
+        android:textStyle="bold|italic"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold|italic"
+        android:text="1.The app contains a Signup screen where you need to Enter password to enter the app and a backup phone number when you forget your password or keywords.\n2.Next screen contains 2 options To Set your a. Keywords and b. Reset Password.\n3.Once you click on Set Keywords you will be having option to set the keywords for(General mode, Wi-Fi, Gps-location).\n4.Once you set the keywords, whenever you want to switch on General mode just message the keyword you saved for General mode from any of your friends mobile.\n5.The location sent when you send the keyword set for GPS gives a proper latitude and longitude, But address will be sent only when there is a proper internet connection.\n6.In any case if you lose your password just message &quot;BackupPassword&quot; from any of the mobile,Then the password will be sent to the Mobile number which you saved while signing up.\n7.In any case if you forget your Keywords just message &quot;BackupKeywords&quot; from any of the mobile, Then the Keywords will be sent to the Mobile number which you saved while signing up.\n"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold|italic"
+        android:text="Note: The location and Address may or may not be accurate"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold|italic"
+        android:text="Note: The passwords and keywords are Case-sensitive"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+</LinearLayout>
+</ScrollView>
+</RelativeLayout>
+
+<!-- From: file:/Users/abhinavkumar/USC_Code/Course-Work/web-tech/TheShield/app/src/main/res/layout/menuhelp.xml -->
